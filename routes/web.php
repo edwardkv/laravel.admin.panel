@@ -34,9 +34,37 @@ Route::group(['middleware' => ['status', 'auth']], function () {
     ];
 
     Route::group($groupData, function () {
-        Route::resource('index', "MainController")->names('blog.admin.index');
+        Route::resource('index', 'MainController')
+            ->names('blog.admin.index');
 
     });
+
+    Route::get('user/index','\App\Http\Controllers\Blog\User\MainController@index');
+
+//    //User side
+//  $groupeData = [
+//        'namespace' => '\App\Http\Controllers\',
+//        'prefix' => 'user',
+//    ];
+//    Route::group($groupeData, function () {
+//        Route::resource('index', 'MainController')
+//            ->names('blog.user.index');
+//    });
+//    //---------
+//
+//
+//    //Disabled side - in that moment don`t work yet
+//    $groupeData = [
+//        'namespace' => 'Blog\Disabled',
+//        'prefix' => 'disabled',
+//    ];
+//    Route::group($groupeData, function () {
+//        Route::resource('index', 'MainController')
+//            ->names('blog.disabled.index');
+//    });
+    //---------
+
+
 
 
 });
