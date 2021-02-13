@@ -230,6 +230,8 @@
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 
+<script src="{{asset('js/my.js')}}"></script>
+
 <!-- === = ===  -->
 
 </body>

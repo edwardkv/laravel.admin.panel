@@ -50,7 +50,7 @@
                                         <td>
                                             <a href="{{route('blog.admin.orders.edit',$order->id)}}" title="редактировать заказ"><i class="fa fa-fw fa-eye"></i></a>&nbsp;&nbsp;&nbsp;
 
-                                            <a href="{{--route('blog.admin.orders.forcedestroy', $order->id)--}}" title="удалить из БД"><i class="fa fa-fw fa-close text-danger deletebd"></i></a>&nbsp;&nbsp;&nbsp;
+                                            <a href="{{route('blog.admin.orders.forcedestroy', $order->id)}}" title="удалить из БД"><i class="fa fa-fw fa-close text-danger deletebd"></i></a>&nbsp;&nbsp;&nbsp;
                                         </td>
                                     </tr>
                                 @empty
