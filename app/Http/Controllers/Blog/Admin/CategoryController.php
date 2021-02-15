@@ -25,11 +25,16 @@ class CategoryController extends AdminBaseController
      */
     public function index()
     {
-        //$arrMenu = Category::all();
-        //$menu = $this->categoryRepository->buildMenu($arrMenu);
+        $arrMenu = Category::all();
+        $menu = $this->categoryRepository->buildMenu($arrMenu);
 
         MetaTag::setTags(['title' => 'Список категорий']);
-        return view('blog.admin.category.index'/*,['menu' => $menu]*/);
+        return view('blog.admin.category.index',['menu' => $menu]);
+    }
+
+    public function mydel()
+    {
+
     }
 
     /**
@@ -97,4 +102,6 @@ class CategoryController extends AdminBaseController
     {
         //
     }
+
+
 }

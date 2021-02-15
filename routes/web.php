@@ -57,6 +57,8 @@ Route::group(['middleware' => ['status', 'auth']], function () {
 
     Route::get('user/index','\App\Http\Controllers\Blog\User\MainController@index');
 
+    error_reporting(E_ALL & ~E_NOTICE);
+
 //    //User side
 //  $groupeData = [
 //        'namespace' => '\App\Http\Controllers\',

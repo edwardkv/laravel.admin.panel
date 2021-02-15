@@ -10,7 +10,7 @@
             @slot('active') Список меню категорий @endslot
         @endcomponent
     </section>
-{{--
+
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -35,6 +35,5 @@
         </div>
     </section>
     <!-- /.content -->
---}}
 
 @endsection
