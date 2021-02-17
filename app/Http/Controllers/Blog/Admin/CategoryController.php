@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Category;
@@ -34,7 +35,32 @@ class CategoryController extends AdminBaseController
 
     public function mydel()
     {
+        $id = $this->categoryRepository->getRequestID();
+        if (!$id){
+            return back()
+                ->withErrors(['msg'=>'Ошибка с ID']);
+        }
 
+        $children = $this->categoryRepository->checkChildren($id);
+        if ($children){
+            return back()
+                ->withErrors(['msg'=>'Удаление невозможно, в категории есть вложенные категории']);
+        }
+
+        $parents = $this->categoryRepository->checkParentsInProducts($id);
+        if ($parents){
+            return back()
+                ->withErrors(['msg'=>'Удаление невозможно, в категории есть товары']);
+        }
+
+        $delete = $this->categoryRepository->deleteCategory($id);
+        if ($delete){
+            return redirect()
+                ->route('blog.admin.categories.index')
+                ->with(['success' => "Запись id [$id] удалена"]);
+        }   else {
+            return back()->withErrors(['msg' => 'Ошибка удаления']);
+        }
     }
 
     /**
@@ -44,7 +70,15 @@ class CategoryController extends AdminBaseController
      */
     public function create()
     {
-        //
+        $item = new Category();
+        $categoryList = $this->categoryRepository->getComboBoxCategories();
+
+        MetaTag::setTags(['title' => 'Создание новой категории']);
+        return view('blog.admin.category.create', [
+            'categories' => Category::with('children')->where('parent_id', '0')->get(),
+            'delimiter' => '-',
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -53,9 +87,29 @@ class CategoryController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCategoryUpdateRequest  $request)
     {
-        //
+        $name = $this->categoryRepository->checkUniqueName($request->title, $request->parent_id);
+
+        if($name){
+            return back()
+                ->withErrors(['msg'=>'Не может быть в одной и той же Категории двух одинаковых. Выбирите другую Категорию.'])
+                ->withInput();
+        }
+
+        $data = $request->input();
+        $item = new Category();
+        $item->fill($data)->save();
+
+        if ($item) {
+            return redirect()
+                ->route('blog.admin.categories.create', [$item->id])
+                ->with(['success' => 'Успешно сохранено']);
+        } else {
+            return back()
+                ->withErrors(['msg'=>'Ошибка сохранения'])
+                ->withInput();
+        }
     }
 
     /**
