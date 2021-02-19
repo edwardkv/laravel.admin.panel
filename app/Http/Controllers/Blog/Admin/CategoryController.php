@@ -131,7 +131,19 @@ class CategoryController extends AdminBaseController
      */
     public function edit($id)
     {
-        //
+        $item = $this->categoryRepository->getId($id);
+        if (empty($item)){
+            abort(404);
+        }
+
+        $categoryList = $this->categoryRepository->getComboBoxCategories();
+
+        MetaTag::setTags(['title' => 'Редактирование категории']);
+        return view('blog.admin.category.edit',[
+            'categories' => Category::with('children')->where('parent_id','0')->get(),
+            'delimiter' => '-',
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -141,11 +153,27 @@ class CategoryController extends AdminBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        //
-    }
+        $item = $this->categoryRepository->getId($id);
+        if (empty($item)){
+            return back()
+                ->withErrors(['msg' => "Запись = [{$id}] не найдена"])
+                ->withInput();
+        }
 
+        $data = $request->all();
+        $result = $item->update($data);
+        if ($result){
+            return redirect()
+                ->route('blog.admin.categories.edit', $item->id)
+                ->with(['success' => "Успешно сохранено"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения!'])
+                ->withInput();
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
