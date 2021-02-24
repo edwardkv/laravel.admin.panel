@@ -70,7 +70,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    {{--<a href="{{route('blog.admin.users.edit',Auth::user()->id)}}" class="btn btn-default btn-flat">Профиль</a>--}}
+                                    <a href="{{route('blog.admin.users.edit',Auth::user()->id)}}" class="btn btn-default btn-flat">Профиль</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -127,14 +127,14 @@
                     </ul>
                 </li>
                 <li class="treeview">
-                    <a href="#"><i class="fa fa-cubes"></i> <span>Товары</span>
+                    <a href="{{route('blog.admin.products.index')}}"><i class="fa fa-cubes"></i> <span>Товары</span>
                         <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="">Список товаров</a></li>
-                        <li><a href="">Добавить товар</a></li>
+                        <li><a href="{{route('blog.admin.products.index')}}">Список товаров</a></li>
+                        <li><a href="{{route('blog.admin.products.create')}}">Добавить товар</a></li>
                     </ul>
                 </li>
                 <li><a href=""><i class="fa fa-database"></i> <span>Кэширование</span></a></li>

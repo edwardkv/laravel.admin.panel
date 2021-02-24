@@ -30,4 +30,25 @@ class ProductRepository extends  CoreRepository
         return $get;
     }
 
+    /** INDEX PAGE */
+    public function getAllProducts($perpage)
+    {
+        $get_all = $this->startConditions()::withTrashed()
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select('products.*', 'categories.title AS cat')
+            ->orderBy(\DB::raw('LENGTH(products.title)', "products.title"))
+            ->limit($perpage)
+            ->paginate($perpage);
+
+        return $get_all;
+    }
+
+    /** Count products */
+    public function getCountProducts()
+    {
+        $count = $this->startConditions()
+            ->count();
+        return $count;
+    }
+
 }
