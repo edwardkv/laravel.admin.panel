@@ -21,7 +21,6 @@ spl_autoload_register(function($path) {
     list($ns, $class) = $path;
 
     if ($ns == "kcfinder") {
-
         if ($class == "uploader")
             require "core/class/uploader.php";
         elseif ($class == "browser")

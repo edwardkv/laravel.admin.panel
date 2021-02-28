@@ -1,9 +1,6 @@
 <?php
 
-    use App\Patterns\Fundamental\BlogContainer;
-
-
-    /** This file is part of KCFinder project
+/** This file is part of KCFinder project
   *
   *      @desc Base configuration file
   *   @package KCFinder
@@ -19,10 +16,12 @@
    even if you are using session configuration.
    See http://kcfinder.sunhater.com/install for setting descriptions */
 
-    require __DIR__ . '/../../../../../vendor/autoload.php';
 
 
-    $_CONFIG = array(
+$_CONFIG = array(
+
+
+// GENERAL SETTINGS
 
     'disabled' => false,
     'uploadURL' => "../../../images",

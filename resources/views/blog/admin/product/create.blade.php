@@ -7,7 +7,7 @@
         @component('blog.admin.components.breadcrumb')
             @slot('title') Добавление нового товара @endslot
             @slot('parent') Главная @endslot
-            @slot('product') Список заказов @endslot
+            @slot('product') Список товаров @endslot
             @slot('active') Новый товар @endslot
         @endcomponent
     </section>
@@ -54,13 +54,13 @@
                             </div>
 
                             <div class="form-group has-feedback">
-                                <label for="old_price">Цена</label>
+                                <label for="old_price">Старая цена</label>
                                 <input type="text" name="old_price" class="form-control" id="description" placeholder="Старая цена" pattern="^[0-9.]{1,}$" value="{{old('old_price')}}" data-error="Допускаются цифры и десятичная точка">
                                 <div class="help-block with-errors"></div>
                             </div>
 
                             <div class="form-group has-feedback">
-                                <label for="content">Контент</label>
+                                <label for="content">Контент</label><br/>
                                 <textarea name="content" id="editor1" cols="80" rows="10">{{old('content')}}</textarea>
                             </div>
 
@@ -84,7 +84,7 @@
                             <br>
                             <div class="form-group">
                                 <label for="related">Фильтры продукта</label>
-                {{ Widget::run('filter',['tpl' => 'widgets.filter','filter' => null, ])}}
+                                {{Widget::run('Filter',['tpl' => 'widgets.filter','filter' => null, ])}}
 
                             </div>
 
