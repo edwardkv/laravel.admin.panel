@@ -51,4 +51,16 @@ class ProductRepository extends  CoreRepository
         return $count;
     }
 
+    /** Get Products for related  */
+    public function getProducts($q)
+    {
+        $products = \DB::table('products')
+            ->select('id', 'title')
+            ->where('title', 'LIKE', ["%{$q}%"])
+            ->limit(8)
+            ->get();
+        return $products;
+    }
+
+
 }

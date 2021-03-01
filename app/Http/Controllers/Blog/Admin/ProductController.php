@@ -104,4 +104,25 @@ class ProductController extends AdminBaseController
     {
         //
     }
+
+    /** Related Products
+     * @param Request $request
+     */
+    public function related(Request $request)
+    {
+        $q = isset($request->q) ? htmlspecialchars(trim($request->q)) : '';
+        $data['items'] = [];
+        $products = $this->productRepository->getProducts($q);
+        if ($products) {
+            $i = 0;
+            foreach ($products as $id => $title) {
+                $data['items'][$i]['id'] = $title->id;
+                $data['items'][$i]['text'] = $title->title;
+                $i++;
+            }
+        }
+        echo json_encode($data);
+        die;
+    }
+
 }
