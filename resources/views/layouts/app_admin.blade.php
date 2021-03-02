@@ -239,11 +239,11 @@
 <!-- Для select связанные товары в админке добавить товар -->
 <script src="{{asset('adminlte/bower_components/select2/dist/js/select2.full.js')}}"></script>
 
-
-
 <script src="{{asset('js/my.js')}}"></script>
 
 <!-- === = ===  -->
+@include('blog.admin.product.include.script_img')
+@include('blog.admin.product.include.script_gallery')
 @include('blog.admin.product.include.script_related_prod')
 
 </body>

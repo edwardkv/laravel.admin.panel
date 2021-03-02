@@ -62,5 +62,60 @@ class ProductRepository extends  CoreRepository
         return $products;
     }
 
+    /**  Upload Single Image*/
+    public function uploadImg($name, $wmax, $hmax)
+    {
+        $uploaddir = 'uploads/single/';
+        $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $name));
+        $uploadfile = $uploaddir . $name;
+        \Session::put('single', $name);
+        self::resize($uploadfile, $uploadfile, $wmax, $hmax, $ext);
+    }
+
+    /**  Resize Images for My needs */
+    public static function resize($target, $dest, $wmax, $hmax, $ext)
+    {
+        list($w_orig, $h_orig) = getimagesize($target);
+        $ratio = $w_orig / $h_orig;
+
+        if (($wmax / $hmax) > $ratio) {
+            $wmax = $hmax * $ratio;
+        } else {
+            $hmax = $wmax / $ratio;
+        }
+
+        $img = "";
+        // imagecreatefromjpeg | imagecreatefromgif | imagecreatefrompng
+        switch ($ext) {
+            case("gif"):
+                $img = imagecreatefromgif($target);
+                break;
+            case("png"):
+                $img = imagecreatefrompng($target);
+                break;
+            default:
+                $img = imagecreatefromjpeg($target);
+        }
+        $newImg = imagecreatetruecolor($wmax, $hmax);
+        if ($ext == "png") {
+            imagesavealpha($newImg, true);
+            $transPng = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+            imagefill($newImg, 0, 0, $transPng);
+        }
+        imagecopyresampled($newImg, $img, 0, 0, 0, 0, $wmax, $hmax, $w_orig,
+            $h_orig); // копируем и ресайзим изображение
+        switch ($ext) {
+            case("gif"):
+                imagegif($newImg, $dest);
+                break;
+            case("png"):
+                imagepng($newImg, $dest);
+                break;
+            default:
+                imagejpeg($newImg, $dest);
+        }
+        imagedestroy($newImg);
+    }
+
 
 }

@@ -7,6 +7,8 @@ use App\Models\Admin\Category;
 use App\Repositories\Admin\ProductRepository;
 use Illuminate\Http\Request;
 use MetaTag;
+use App\SBlog\Core\BlogApp;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends AdminBaseController
 {
@@ -124,5 +126,92 @@ class ProductController extends AdminBaseController
         echo json_encode($data);
         die;
     }
+
+     /** Upload Single Image from my.js
+     * @param Request $request
+     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
+    public function ajaxImage(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            return view('blog.admin.product.include.image_single_edit');
+        } else {
+            $validator = \Validator::make($request->all(),
+                [
+                    'file' => 'image|max:5000',
+                ],
+                [
+                    'file.image' => 'Файл должен быть картинкой (jpeg, png, bmp, gif, or svg)',
+                    'file.max' => 'Ошибка! Максимальный вес файла - 5 Мб!',
+                ]);
+            if ($validator->fails()) {
+                return array(
+                    'fail' => true,
+                    'errors' => $validator->errors()
+                );
+            }
+            $extension = $request->file('file')->getClientOriginalExtension();
+            $dir = 'uploads/single/';
+            $filename = uniqid() . '_' . time() . '.' . $extension;
+            $request->file('file')->move($dir, $filename);
+            $wmax = BlogApp::get_instance()->getProperty('img_width');
+            $hmax = BlogApp::get_instance()->getProperty('img_height');
+            $this->productRepository->uploadImg($filename, $wmax, $hmax);
+            return $filename;
+        }
+    }
+
+    /**
+     * Add Photo for Gallery Ajax from my.js
+     * @param Request $request
+     * @return array
+     */
+    public function gallery(Request $request)
+    {
+        $validator = \Validator::make($request->all(),
+            [
+                'file' => 'image|max:5000',
+            ],
+            [
+                'file.image' => 'Файл должен быть картинкой (jpeg, png, bmp, gif, or svg)',
+                'file.max' => 'Ошибка! Максимальный вес файла - 5 Мб!',
+            ]);
+        if ($validator->fails()) {
+            return array(
+                'fail' => true,
+                'errors' => $validator->errors()
+            );
+        }
+        if (isset($_GET['upload'])) {
+            $wmax = BlogApp::get_instance()->getProperty('gallery_width');
+            $hmax = BlogApp::get_instance()->getProperty('gallery_height');
+            $name = $_POST['name'];
+            $this->productRepository->uploadGallery($name, $wmax, $hmax);
+        }
+    }
+
+
+    /** Delete Image */
+    public function deleteImage($filename)
+    {
+        File::delete('uploads/single/' . $filename);
+    }
+
+    /** Delete Gallery */
+    public function deleteGallery()
+    {
+        $id = isset($_POST['id']) ? $_POST['id'] : null;
+        $src = isset($_POST['src']) ? $_POST['src'] : null;
+        if (!$id || !$src) {
+            return;
+        }
+        if (\DB::delete("DELETE FROM galleries WHERE product_id = ? AND img = ?", [$id, $src])) {
+            @unlink("uploads/gallery/$src");
+            exit('1');
+        }
+        return;
+    }
+
+
 
 }
