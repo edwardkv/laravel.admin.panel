@@ -72,6 +72,21 @@ class ProductRepository extends  CoreRepository
         self::resize($uploadfile, $uploadfile, $wmax, $hmax, $ext);
     }
 
+    /**  Upload Gallery Images */
+    public function uploadGallery($name, $wmax, $hmax)
+    {
+        $uploaddir = 'uploads/gallery/';
+        $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $_FILES[$name]['name']));
+        $new_name = md5(time()) . ".$ext";
+        $uploadfile = $uploaddir . $new_name;
+        \Session::push('gallery', $new_name);
+        if (@move_uploaded_file($_FILES[$name]['tmp_name'], $uploadfile)) {
+            self::resize($uploadfile, $uploadfile, $wmax, $hmax, $ext);
+            $res = array("file" => $new_name);
+            echo json_encode($res);
+        }
+    }
+
     /**  Resize Images for My needs */
     public static function resize($target, $dest, $wmax, $hmax, $ext)
     {
