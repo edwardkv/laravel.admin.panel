@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\AdminProductsCreateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Category;
+use App\Models\Admin\Product;
 use App\Repositories\Admin\ProductRepository;
 use Illuminate\Http\Request;
 use MetaTag;
@@ -57,9 +59,28 @@ class ProductController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminProductsCreateRequest $request)
     {
-        //
+        $data = $request->input();
+        $product = (new Product())->create($data);
+        $id = $product->id;
+        $product->status = $request->status ? '1' : '0';
+        $product->hit = $request->hit ? '1' : '0';
+        $product->category_id = $request->parent_id ?? '0';
+        $this->productRepository->getImg($product);
+        $save = $product->save();
+        if ($save) {
+            $this->productRepository->editFilter($id, $data);//??
+            $this->productRepository->editRelatedProduct($id, $data);//??
+            $this->productRepository->saveGallery($id);//??
+            return redirect()
+                ->route('blog.admin.products.create', [$product->id])
+                ->with(['success' => 'Успешно сохранено']);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
+        }
     }
 
     /**

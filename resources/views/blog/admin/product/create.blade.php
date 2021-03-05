@@ -66,13 +66,13 @@
 
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" name="status" checked> Статус
+                                    <input type="checkbox" name="status" checked value="1"> Статус
                                 </label>
                             </div>
 
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" name="hit"> Хит
+                                    <input type="checkbox" name="hit" value="1"> Хит
                                 </label>
                             </div>
 

@@ -87,6 +87,134 @@ class ProductRepository extends  CoreRepository
         }
     }
 
+    public function getImg($product)
+    {
+        clearstatcache();
+        if (!empty(\Session::get('single'))) {
+            $name = \Session::get('single');
+            $product->img = $name;
+            \Session::forget('single');
+            return;
+        }
+        if (empty(\Session::get('single')) && !is_file(WWW . '/uploads/single/' . $product->img)) {
+            $product->img = null;
+        }
+        return;
+    }
+
+    /** Save Gallery Images
+     * @param $id
+     */
+    public function saveGallery($id)
+    {
+        if (!empty(\Session::get('gallery'))) {
+            $sql_part = '';
+            foreach (\Session::get('gallery') as $v) {
+                $sql_part .= "('$v', $id),";
+            }
+            $sql_part = rtrim($sql_part, ',');
+            \DB::insert("insert into galleries (img, product_id) VALUES $sql_part");
+            \Session::forget('gallery');
+        }
+    }
+
+    /** Edit filters */
+    public function editFilter($id, $data)
+    {
+        $filter = \DB::table('attribute_products')
+            ->where('product_id', $id)
+            ->pluck('attr_id')
+            ->toArray();
+
+        /** если убрал фильтры */
+        if (empty($data['attrs']) && !empty($filter)) {
+            \DB::table('attribute_products')
+                ->where('product_id', $id)
+                ->delete();
+            return;
+        }
+
+        /** если добавил фильтры */
+        if (empty($filter) && !empty($data['attrs'])) {
+            $sql_part = '';
+            foreach ($data['attrs'] as $v) {
+                $sql_part .= "($v, $id),";
+            }
+            $sql_part = rtrim($sql_part, ',');
+            \DB::insert("insert into attribute_products (attr_id, product_id) VALUES $sql_part");
+            return;
+        }
+
+        /** если поменял фильтры */
+        if (!empty($data['attrs'])) {
+            $result = array_diff($filter, $data['attrs']);
+            if ($result) {
+                \DB::table('attribute_products')
+                    ->where('product_id', $id)
+                    ->delete();
+                $sql_part = '';
+                foreach ($data['attrs'] as $v) {
+                    $sql_part .= "($v, $id),";
+                }
+                $sql_part = rtrim($sql_part, ',');
+                \DB::insert("insert into attribute_products (attr_id, product_id) VALUES $sql_part");
+            }
+        }
+    }
+
+
+    /** Edit Related Product */
+    public function editRelatedProduct($id, $data)
+    {
+        $related_product = \DB::table('related_products')
+            ->select('related_id')
+            ->where('product_id', $id)
+            ->pluck('related_id')
+            ->toArray();
+
+        /** Если убрал связанные товары */
+        if (empty($data['related']) && !empty($related_product)) {
+            \DB::table('related_products')
+                ->where('product_id', $id)
+                ->delete();
+            return;
+        }
+
+        /** Если добавил связанные товары */
+        if (empty($related_product) && !empty($data['related'])) {
+            $sql_part = '';
+
+            foreach ($data['related'] as $v) {
+                $v = (int)$v;
+                $sql_part .= "($id, $v),";
+            }
+            $sql_part = rtrim($sql_part, ',');
+
+
+            \DB::insert("insert into related_products (product_id, related_id) VALUES $sql_part");
+            return;
+        }
+
+
+        /** Если поменял связанные товары */
+        if (!empty($data['related'])) {
+
+            $result = array_diff($related_product, $data['related']);
+            if (!(empty($result)) || count($related_product) != count($data['related'])) {
+                \DB::table('related_products')
+                    ->where('product_id', $id)
+                    ->delete();
+                $sql_part = '';
+                foreach ($data['related'] as $v) {
+                    $sql_part .= "($id, $v),";
+                }
+                $sql_part = rtrim($sql_part, ',');
+                \DB::insert("insert into related_products (product_id, related_id) VALUES $sql_part");
+            }
+        }
+
+    }
+
     /**  Resize Images for My needs */
     public static function resize($target, $dest, $wmax, $hmax, $ext)
     {
