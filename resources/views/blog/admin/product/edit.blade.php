@@ -67,13 +67,13 @@
 
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" name="status" {{$product->status ? 'checked' : null}}> Статус
+                                    <input type="checkbox" name="status" {{$product->status ? 'checked' : null}} value="1" > Статус
                                 </label>
                             </div>
 
                             <div class="form-group">
                                 <label>
-                                    <input type="checkbox" name="hit" {{$product->hit ? 'checked' : null}}> Хит
+                                    <input type="checkbox" name="hit" {{$product->hit ? 'checked' : null}} value="1"> Хит
                                 </label>
                             </div>
 

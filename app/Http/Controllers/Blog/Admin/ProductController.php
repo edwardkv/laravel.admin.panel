@@ -102,7 +102,20 @@ class ProductController extends AdminBaseController
      */
     public function edit($id)
     {
-        //
+        $product = $this->productRepository->getInfoProduct($id);
+        $id = $product->id;
+        BlogApp::get_instance()->setProperty('parent_id', $product->category_id);
+        $filter = $this->productRepository->getFiltersProduct($id);
+        $related_products = $this->productRepository->getRelatedProducts($id);
+        $images = $this->productRepository->getGallery($id);
+
+        MetaTag::setTags(['title' => "Редактирование товара № {$id}"]);
+        return view('blog.admin.product.edit', compact('product', 'images', 'filter', 'related_products', 'id'), [
+            'categories' => Category::with('children')->where('parent_id', '0')
+                ->get(),
+            'delimiter' => '-',
+            'product' => $product,
+        ]);
     }
 
     /**

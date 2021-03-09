@@ -20,6 +20,47 @@ class ProductRepository extends  CoreRepository
         return Model::class;
     }
 
+    /** Get Info for One Product by Id */
+    public function getInfoProduct($id)
+    {
+        $product = $this->startConditions()
+            ->find($id);
+        return $product;
+    }
+
+    /** Get Filters One Product*/
+    public function getFiltersProduct($id)
+    {
+        $filter = \DB::table('attribute_products')
+            ->select('attr_id')
+            ->where('product_id', $id)
+            ->pluck('attr_id')
+            ->all();
+        return $filter;
+    }
+
+    /** Get Related Products One Product*/
+    public function getRelatedProducts($id)
+    {
+        $related_products = $this->startConditions()
+            ->join('related_products', 'products.id', '=', 'related_products.related_id')
+            ->select('products.title', 'related_products.related_id')
+            ->where('related_products.product_id', $id)
+            ->get();
+        return $related_products;
+    }
+
+    /** Get Gallery for One Product*/
+    public function getGallery($id)
+    {
+        $gallery = \DB::table('galleries')
+            ->where('product_id', $id)
+            ->pluck('img')
+            ->all();
+        return $gallery;
+
+    }
+
     /** Last products */
     public function getLastProducts($perpage)
     {

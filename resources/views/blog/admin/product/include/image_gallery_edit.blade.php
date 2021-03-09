@@ -10,7 +10,12 @@
         @if (!empty($images))
                 <p><small>Для удаления нажмите на картинку.</small></p>
             @foreach($images as $image)
-                    <img src='{{asset("/uploads/gallery/$image")}}' alt="" style="max-height: 150px; cursor: pointer;" data-id="{{$product->id}}" data-src="{{$image}}" class="del-items">
+                    <img src='{{asset("/uploads/gallery/$image")}}'
+                         alt=""
+                         style="max-height: 150px; cursor: pointer;"
+                         data-id="{{$product->id}}"
+                         data-src="{{$image}}"
+                         class="del-items">
 
             @endforeach
         @endif
