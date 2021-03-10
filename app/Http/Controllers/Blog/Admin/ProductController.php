@@ -119,15 +119,39 @@ class ProductController extends AdminBaseController
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Update Product
+     * @param AdminProductsCreateRequest $request
+     * @param $id
+     * @return $this
      */
-    public function update(Request $request, $id)
+    public function update(AdminProductsCreateRequest $request, $id)
     {
-        //
+        $product = $this->productRepository->getId($id);
+        if (empty($product)) {
+            return back()
+                ->withErrors(['msg' => "Запись = [{$id}] не найдена"])
+                ->withInput();
+        }
+        $data = $request->all();
+        $result = $product->update($data);
+        $product->status = $request->status ? '1' : '0';
+        $product->hit = $request->hit ? '1' : '0';
+        $product->category_id = $request->parent_id ?? $product->category_id;
+        $this->productRepository->getImg($product);
+        $save = $product->save();
+
+        if ($result && $save) {
+            $this->productRepository->editFilter($id, $data);
+            $this->productRepository->editRelatedProduct($id, $data);
+            $this->productRepository->saveGallery($id);
+            return redirect()
+                ->route('blog.admin.products.edit', [$product->id])
+                ->with(['success' => 'Успешно сохранено']);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
+        }
     }
 
     /**
