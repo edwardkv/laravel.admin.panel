@@ -169,8 +169,8 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="">Группы фильтров</a></li>
-                        <li><a href="">Фильтры</a></li>
+                        <li><a href="{{url('/admin/filter/group-filter')}}">Группы фильтров</a></li>
+                        <li><a href="{{url('/admin/filter/attributes-filter')}}">Фильтры</a></li>
                     </ul>
                 </li>
             </ul>
