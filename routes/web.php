@@ -77,10 +77,13 @@ Route::group(['middleware' => ['status', 'auth']], function () {
             ->name('blog.admin.products.deleteproduct');
 
         Route::get('/filter/group-filter', 'FilterController@attributeGroup');
-        #Route::get('/filter/group-add', 'FilterController@attributeGroup');
-        Route::get('/filter/group-delete/{id}', 'FilterController@groupDelete');
+        Route::get('/filter/group-add', 'FilterController@attributeGroup');
+
         Route::match(['get','post'],'/filter/group-add-group', 'FilterController@groupAdd');
         Route::match(['get','post'],'/filter/group-edit/{id}','FilterController@groupEdit');
+
+        Route::get('/filter/group-delete/{id}', 'FilterController@groupDelete');
+
         Route::get('/filter/attributes-filter', 'FilterController@attributeFilter');
         Route::match(['get','post'],'/filter/attrs-add', 'FilterController@attributeAdd');
         Route::get('/filter/attr-delete/{id}', 'FilterController@attrDelete');

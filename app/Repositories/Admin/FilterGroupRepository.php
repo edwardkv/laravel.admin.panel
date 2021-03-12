@@ -36,4 +36,18 @@ class FilterGroupRepository extends CoreRepository
         return $attrs_group;
     }
 
+    /** Delete one Group Filter by Id*/
+    public function deleteGroupFilter($id)
+    {
+        $delete = $this->startConditions()->where('id', $id)->forceDelete();
+        return $delete;
+    }
+
+    /** Count all groups filter*/
+    public function getCountGroupFilter()
+    {
+        $count = \DB::table('attribute_values')->count();
+        return $count;
+    }
+
 }
