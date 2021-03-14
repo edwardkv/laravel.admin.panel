@@ -22,7 +22,7 @@
                         <div class="box-body">
                             <div class="form-group has-feedback">
                                 <label for="value">Наименование</label>
-                                <input type="text" name="value" class="form-control" id="value" placeholder="Наименование"  required>
+                                <input type="text" name="value" class="form-control" id="value" placeholder="Наименование"  value="{{old('value')}}" required>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
                             <div class="form-group">
@@ -30,7 +30,7 @@
                                 <select name="attr_group_id" id="category_id" class="form-control">
                                     <option>Выберите группу</option>
                                     @foreach($group as $item)
-                                    <option value="{{$item->id}}">{{$item->title}}</option>
+                                    <option value="{{$item->id}}" @if (old('attr_group_id') == $item->id) selected  @endif >{{$item->title}}</option>
                                     @endforeach
                                 </select>
                             </div>

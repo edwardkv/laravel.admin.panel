@@ -168,6 +168,42 @@ class FilterController extends AdminBaseController
         }
     }
 
+    /** Edit Attribute Filter
+     * @param BlogAttrsFilterAddRequest $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
+    public function attrEdit(BlogAttrsFilterAddRequest $request, $id)
+    {
+        if (empty($id)) {
+            return back()->withErrors(['msg' => "Запись [{$id}] не найдена!"]);
+        }
+        if ($request->isMethod('post')) {
+
+            $attr = AttributeValue::find($id);
+            $attr->value = $request->value;
+            $attr->attr_group_id = $request->attr_group_id;
+            $attr->save();
+
+            if ($attr) {
+                return back()
+                    ->with(['success' => 'Успешно изменено']);
+            } else {
+                return back()
+                    ->withErrors(['msg' => "Ошибка изменения"])
+                    ->withInput();
+            }
+        } else {
+            if ($request->isMethod('get')) {
+
+                $atrr = $this->filterAttrsRepository->getInfoProduct($id);
+                $group = $this->filterGroupRepository->getAllGroupsFilter();
+                MetaTag::setTags(['title' => 'Редактирование фильтра']);
+                return view('blog.admin.filter.attrs-edit', compact('group','atrr'));
+            }
+        }
+    }
+
 
 
 }

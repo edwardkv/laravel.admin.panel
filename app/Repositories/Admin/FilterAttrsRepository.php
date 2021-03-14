@@ -36,5 +36,19 @@ class FilterAttrsRepository extends CoreRepository
         return $attrs;
     }
 
+    /** Check unique Name for add new Attribute */
+    public function checkUnique($name)
+    {
+        $unique = $this->startConditions()->where('value', $name)->count();
+        return $unique;
+    }
+
+    /** Get Info by Id */
+    public function getInfoProduct($id)
+    {
+        $product = $this->startConditions()
+            ->find($id);
+        return $product;
+    }
 
 }
