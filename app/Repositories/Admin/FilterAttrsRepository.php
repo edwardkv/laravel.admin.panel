@@ -51,4 +51,11 @@ class FilterAttrsRepository extends CoreRepository
         return $product;
     }
 
+    /** Delete one Attribute Filter by Id*/
+    public function deleteAttrFilter($id)
+    {
+        $delete = $this->startConditions()->where('id', $id)->forceDelete();
+        return $delete;
+    }
+
 }

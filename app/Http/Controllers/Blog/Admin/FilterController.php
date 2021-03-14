@@ -204,6 +204,20 @@ class FilterController extends AdminBaseController
         }
     }
 
+    /** Delete Attribute filter by Id */
+    public function attrDelete($id)
+    {
+        if (empty($id)) {
+            return back()->withErrors(['msg' => "Запись [{$id}] не найдена!"]);
+        }
 
+        $delete = $this->filterAttrsRepository->deleteAttrFilter($id);
+
+        if ($delete) {
+            return back()->with(['success' => "Удалено"]);
+        } else {
+            return back()->withErrors(['msg' => "Ошибка удаления"]);
+        }
+    }
 
 }
