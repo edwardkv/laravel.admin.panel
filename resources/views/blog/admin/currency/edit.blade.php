@@ -55,7 +55,7 @@
 
                             <div class="form-group has-feedback">
                                 <label for="value">
-                                    <input type="checkbox" name="base" @if ($currency->base)
+                                    <input type="checkbox" name="base" value="1" @if ($currency->base)
                                         checked
                                     @endif>
                                     Базовая валюта</label>
