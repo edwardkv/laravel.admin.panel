@@ -371,4 +371,22 @@ class ProductRepository extends  CoreRepository
     }
 
 
+    public  function getSearchProducts($query)
+    {
+        $products = \DB::table('products')
+            ->where('title','LIKE', '%' .$query. '%')
+            ->get()
+            ->all();
+        return $products;
+    }
+
+    public  function getSearchProductsTitle($search)
+    {
+        $result = \DB::table('products')
+            ->select('title')
+            ->where('title','LIKE', '%'. $search. '%')
+            ->pluck('title');
+
+        return $result;
+    }
 }

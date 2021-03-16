@@ -51,4 +51,11 @@ class CurrencyRepository extends CoreRepository
         return $delete;
     }
 
+    public function getBaseCurrency()
+    {
+        $currency = \DB::table('currencies')
+            ->where('base','=', '1')
+            ->first();
+        return $currency;
+    }
 }
